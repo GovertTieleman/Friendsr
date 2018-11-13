@@ -1,9 +1,9 @@
 package com.example.govert.friendsr;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -11,16 +11,18 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private GridView gridView;
-    private FriendsAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        gridView = (GridView) findViewById(R.id.friends_list);
+        // set gridView
+        GridView gridView = (GridView) findViewById(R.id.friends_list);
+
+        // initialize friendsList
         ArrayList<Friend> friendsList = new ArrayList<>();
+
+        // add friends
         friendsList.add(new Friend("Arya", "Not a boy.", R.drawable.arya));
         friendsList.add(new Friend("Cersei", "Evil, but loves her children.", R.drawable.cersei));
         friendsList.add(new Friend("Daenerys", "Mother of Dragons.", R.drawable.daenerys));
@@ -32,18 +34,39 @@ public class MainActivity extends AppCompatActivity {
         friendsList.add(new Friend("Sansa", "Lady of Winterfell.", R.drawable.sansa));
         friendsList.add(new Friend("Tyrion", "His wit and cunning make up for his dwarfish posture.", R.drawable.tyrion));
 
-        adapter = new FriendsAdapter(this, 0, friendsList);
+        // get SharedPreferences to set ratings
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+
+        // set ratings
+        for (Friend f : friendsList) {
+            // get rating for each friend
+            float rating = prefs.getFloat(f.getName(), (float) 0);
+            if (rating != 0) {
+                // if stored rating exists, set rating
+                f.setRating(rating);
+            }
+        }
+
+        // pass friendsList to adapter to generate layout
+        FriendsAdapter adapter = new FriendsAdapter(this, 0, friendsList);
+
+        // set gridView to show layout
         gridView.setAdapter(adapter);
 
+        // set listener for gridView
         gridView.setOnItemClickListener(new GridItemClickListener());
     }
 
+    // activates when a GridItem is clicked
     private class GridItemClickListener implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // make intent and include the instance of Friend class that was clicked
             Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             intent.putExtra("clicked_friend", clickedFriend);
+
+            // start ProfileActivity with intent
             startActivity(intent);
         }
     }
