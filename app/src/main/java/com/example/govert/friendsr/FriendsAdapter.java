@@ -13,16 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsAdapter extends ArrayAdapter<Friend> {
-    private Context mContext;
-    private List<Friend> friendsList = new ArrayList<>();
+    private List<Friend> friendsList;
 
     public FriendsAdapter(Context context, int resource, List<Friend> objects) {
         super(context, resource, objects);
-        mContext = context;
         friendsList = objects;
     }
 
-    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View gridItem = convertView;
@@ -33,7 +30,7 @@ public class FriendsAdapter extends ArrayAdapter<Friend> {
 
         Friend currentFriend =  friendsList.get(position);
 
-        ImageView image = (ImageView)gridItem.findViewById(R.id.imageView_friend);
+        ImageView image = (ImageView) gridItem.findViewById(R.id.imageView_friend);
         image.setImageResource(currentFriend.getDrawableId());
 
         TextView name = (TextView) gridItem.findViewById(R.id.textView_name);

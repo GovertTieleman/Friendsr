@@ -1,7 +1,11 @@
 package com.example.govert.friendsr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -26,10 +30,21 @@ public class MainActivity extends AppCompatActivity {
         friendsList.add(new Friend("Margaery", "Princess of Highgarden.", R.drawable.margaery));
         friendsList.add(new Friend("Melisandre", "Loyal servant of the Lord of Light.", R.drawable.melisandre));
         friendsList.add(new Friend("Sansa", "Lady of Winterfell.", R.drawable.sansa));
-        friendsList.add(new Friend("Tyrion", "His wit and cunning makes up for his dwarfish posture.", R.drawable.tyrion));
-
+        friendsList.add(new Friend("Tyrion", "His wit and cunning make up for his dwarfish posture.", R.drawable.tyrion));
 
         adapter = new FriendsAdapter(this, 0, friendsList);
         gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener(new GridItemClickListener());
+    }
+
+    private class GridItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Friend clickedFriend = (Friend) parent.getItemAtPosition(position);
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            intent.putExtra("clicked_friend", clickedFriend);
+            startActivity(intent);
+        }
     }
 }
