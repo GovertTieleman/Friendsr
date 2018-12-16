@@ -11,7 +11,8 @@
     <ImageView
         android:id="@+id/profileImageView_friend"
         android:layout_width="300dp"
-        android:layout_height="300dp" />
+        android:layout_height="300dp"
+        android:layout_marginBottom="10dp"/>
 
     <RatingBar
         android:id="@+id/ratingBar"
